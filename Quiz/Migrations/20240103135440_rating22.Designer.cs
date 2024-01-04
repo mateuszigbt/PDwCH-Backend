@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quiz.Data;
 
@@ -11,9 +12,11 @@ using Quiz.Data;
 namespace Quiz.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    partial class QuizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240103135440_rating22")]
+    partial class rating22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,15 +119,15 @@ namespace Quiz.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("QuizProfileId")
+                    b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<int>("Score")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizProfileId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Points");
                 });
@@ -257,9 +260,9 @@ namespace Quiz.Migrations
 
             modelBuilder.Entity("Quiz.Model.Points", b =>
                 {
-                    b.HasOne("Quiz.Model.QuizProfile", null)
+                    b.HasOne("Quiz.Model.User", null)
                         .WithMany("Points")
-                        .HasForeignKey("QuizProfileId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Quiz.Model.Question", b =>
@@ -298,13 +301,10 @@ namespace Quiz.Migrations
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("Quiz.Model.QuizProfile", b =>
-                {
-                    b.Navigation("Points");
-                });
-
             modelBuilder.Entity("Quiz.Model.User", b =>
                 {
+                    b.Navigation("Points");
+
                     b.Navigation("QuizProfile");
                 });
 #pragma warning restore 612, 618

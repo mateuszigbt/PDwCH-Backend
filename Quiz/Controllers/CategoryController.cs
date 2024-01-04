@@ -39,7 +39,7 @@ namespace Quiz.Controllers
             var category = _mapper.Map<Category>(categoryDto);
             _quizDbContext.Category.Add(category);
             _quizDbContext.SaveChanges();
-            return Ok("Succesfully added user");
+            return Ok(category);
         }
     }
 }

@@ -13,7 +13,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin))
             .ForMember(dest => dest.QuizProfile, opt => opt.MapFrom(src => src.QuizProfile.Select(a => new QuizProfileDto { Category = a.Category, Rating = a.Rating, Title = a.Title })))
-            .ForMember(dest => dest.Points, opt => opt.MapFrom(src => src.Points.Select(a => new PointsDto { Score = a.Score })))
+            //.ForMember(dest => dest.Points, opt => opt.MapFrom(src => src.Points.Select(a => new PointsDto { Score = a.Score })))
             ;
         CreateMap<Quiz.Model.Quiz, QuizDto>()
             .ForMember(dest => dest.QuizId, opt => opt.MapFrom(src => src.Id))
@@ -34,6 +34,9 @@ public class MappingProfile : Profile
         CreateMap<QuestionDto, Question>();
         CreateMap<Image, ImageDto>();
         CreateMap<ImageDto, Image>();
+        CreateMap<QuizProfile, QuizProfileDto>()
+            .ForMember(dest => dest.Points, opt => opt.MapFrom(src => src.Points.Select(a=> new PointsDto { Score = a.Score})));
+        CreateMap<QuizProfileDto, QuizProfile>();
     }
 
     private static List<ImageDto> MapImages(List<Image> images)

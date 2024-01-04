@@ -10,6 +10,5 @@ namespace Quiz.Model
         public string? Email { get; set; } 
         public bool? IsAdmin { get; set; }
         public List<QuizProfile>? QuizProfile { get; set; } 
-        public List<Points>? Points { get; set; }
     }
 }

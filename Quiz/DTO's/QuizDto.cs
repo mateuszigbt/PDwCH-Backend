@@ -8,7 +8,7 @@ namespace Quiz.DTO_s
         public int QuizId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Rating { get; set; }
+        public int Rating { get; set; }
         public CategoryDto Category { get; set; }
         public List<AnswerDto> Answers { get; set; }
         public List<CorrectAnswerDto> CorrectAnswers { get; set; }

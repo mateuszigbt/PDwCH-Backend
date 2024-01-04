@@ -124,3 +124,4 @@ D:\Backend\PDwCH-Backend\Quiz\obj\Debug\net6.0\refint\Quiz.dll
 D:\Backend\PDwCH-Backend\Quiz\obj\Debug\net6.0\Quiz.pdb
 D:\Backend\PDwCH-Backend\Quiz\obj\Debug\net6.0\Quiz.genruntimeconfig.cache
 D:\Backend\PDwCH-Backend\Quiz\obj\Debug\net6.0\ref\Quiz.dll
+D:\Backend\PDwCH-Backend\Quiz\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

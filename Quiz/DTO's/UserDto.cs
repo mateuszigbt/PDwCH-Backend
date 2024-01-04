@@ -9,6 +9,5 @@ namespace Quiz.DTO_s
         public string? Email { get; set; }
         public bool? IsAdmin { get; set; }
         public List<QuizProfileDto>? QuizProfile { get; set; }
-        public List<PointsDto>? Points { get; set; }
     }
 }

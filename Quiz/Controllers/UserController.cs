@@ -19,7 +19,7 @@ namespace Quiz.Controllers
             _mapper = mapper;
             _quizDbContexts = quizDbContext;
         }
-
+        /*
         [HttpGet("{id}")]
         public IActionResult GetUser(int id) 
         {
@@ -36,7 +36,7 @@ namespace Quiz.Controllers
             var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
-
+        */
         [HttpPost]
         public IActionResult AddUser([FromBody] UserDto userDto)
         {
@@ -51,8 +51,16 @@ namespace Quiz.Controllers
                 Password = userDto.Password,
                 Email = userDto.Email,
                 IsAdmin = userDto.IsAdmin,
-                Points = userDto.Points?.Select(points => new Points { Score = points.Score }).ToList(),
-                QuizProfile = userDto.QuizProfile?.Select(quizProfile => new QuizProfile { Category = quizProfile.Category, Rating = quizProfile.Rating, Title = quizProfile.Title }).ToList()
+                QuizProfile = userDto.QuizProfile?.Select(quizProfile => new QuizProfile
+                {
+                    Category = quizProfile.Category,
+                    Rating = quizProfile.Rating,
+                    Title = quizProfile.Title,
+                    Points = quizProfile.Points?.Select(points => new Points
+                    {
+                        Score = points.Score
+                    }).ToList()
+                }).ToList()
             };
 
             //var user = _mapper.Map<User>(userDto);
@@ -61,6 +69,76 @@ namespace Quiz.Controllers
             return Ok(new {message = "Succesfully added user"});
         }
 
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            var allUsers = _quizDbContexts.Users
+                .Include(u => u.QuizProfile)
+                .ThenInclude(qu => qu.Points)
+                .ToList();
+
+            if (allUsers == null || allUsers.Count == 0)
+            {
+                return NotFound("No users found.");
+            }
+
+            return Ok(allUsers);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetUserById(int id)
+        {
+            var user = _quizDbContexts.Users
+                .Include(u => u.QuizProfile)
+                .ThenInclude(qu => qu.Points)
+                .FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpPost("{id}")]
+        public IActionResult AddPointsAndProfile(int id, [FromBody] UserDto userDto)
+        {
+            var user = _quizDbContexts.Users
+                .Include(u => u.QuizProfile)
+                    .ThenInclude(qp => qp.Points)
+                .FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+
+            if (userDto.QuizProfile != null && userDto.QuizProfile.Any())
+            {
+                if (user.QuizProfile == null)
+                {
+                    user.QuizProfile = new List<QuizProfile>();
+                }
+
+                user.QuizProfile.AddRange(userDto.QuizProfile.Select(profileDto => new QuizProfile
+                {
+                    Category = profileDto.Category,
+                    Rating = profileDto.Rating,
+                    Title = profileDto.Title,
+                    Points = profileDto.Points?.Select(pointsDto => new Points
+                    {
+                        Score = pointsDto.Score
+                    }).ToList()
+                }));
+            }
+
+            _quizDbContexts.SaveChanges();
+
+            return Ok(new { message = "Successfully added Points and QuizProfile for the user." });
+        }
+        /*
         [HttpPost("{id}")]
         public IActionResult AddPointsAndProfile(int id, [FromBody] UserDto userDto)
         {
@@ -116,5 +194,6 @@ namespace Quiz.Controllers
 
             return Ok(allUsers);
         }
+        */
     }
 }

@@ -12,6 +12,7 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "MediatR": "12.2.0",
           "MediatR.Extensions.Microsoft.DependencyInjection": "11.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.0",
           "Microsoft.EntityFrameworkCore": "7.0.2",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.2",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.2",
@@ -116,6 +117,17 @@
           "lib/netstandard2.1/MediatR.Extensions.Microsoft.DependencyInjection.dll": {
             "assemblyVersion": "11.0.0.0",
             "fileVersion": "11.0.0.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.21.0"
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52608"
           }
         }
       },
@@ -878,6 +890,13 @@
       "sha512": "sha512-jfD2NBYvP+HiUil2DWfM4bn+bCLp4H2xvoc9aorcnn2Jpgz7Ey8RyYMpgqeF3bs6CP6t8pzb6WkF5NFF/1RLHA==",
       "path": "mediatr.extensions.microsoft.dependencyinjection/11.0.0",
       "hashPath": "mediatr.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eIhpX25uUn33Ornnh718V2G/nESvk3TNX2FjTarv634GLfE50Fhz2geJ/QYpSmFaUIQ1hkZPfd9i0LcpZ9bfLQ==",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.0",
+      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",

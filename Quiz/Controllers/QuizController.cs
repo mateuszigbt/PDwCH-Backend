@@ -16,12 +16,44 @@ namespace Quiz.Controllers
     {
         private readonly QuizDbContext _quizDbContext;
         private readonly IMapper _mapper;
-        public QuizController(IMapper mapper, QuizDbContext quizDbContext) 
-        { 
+        public QuizController(IMapper mapper, QuizDbContext quizDbContext)
+        {
             _quizDbContext = quizDbContext;
             _mapper = mapper;
         }
 
+
+        [HttpPost]
+        public IActionResult AddQuiz([FromBody] QuizDto quiz)
+        {
+
+            var existingCategory = _quizDbContext.Category.FirstOrDefault(c => c.NameCategory == quiz.Category.NameCategory);
+
+            if (existingCategory == null)
+            {
+                return NotFound("Bad chosen category");
+            }
+
+            var newQuiz = new Quiz.Model.Quiz
+            {
+                Title = quiz.Title,
+                Description = quiz.Description,
+                CategoryId = existingCategory.Id,
+                Rating = quiz.Rating,
+                Answers = quiz.Answers?.Select(answer => new Answer { AnswerText = answer.AnswerText }).ToList(),
+                CorrectAnswers = quiz.CorrectAnswers?.Select(correctAnswer => new CorrectAnswer { correctAnswer = correctAnswer.correctAnswer }).ToList(),
+                Questions = quiz.Questions?.Select(question => new Question { QuestionText = question.QuestionText }).ToList(),
+                Images = quiz.Images?.Select(image => new Image { ChoosenImage = image.ChoosenImage, ContentType = image.ContentType }).ToList(),
+            };
+
+            _quizDbContext.Quiz.Add(newQuiz);
+            _quizDbContext.SaveChanges();
+
+            return Ok(newQuiz);
+        }
+
+
+        /*
         [HttpPost]
         public IActionResult AddQuiz(
         [FromForm] string title,
@@ -73,8 +105,9 @@ namespace Quiz.Controllers
             _quizDbContext.Quiz.Add(newQuiz);
             _quizDbContext.SaveChanges();
 
-            return Ok(new { message = "Successfully added quiz" });
+            return Ok(newQuiz);
         }
+        */
 
         /*prawie
         [HttpPost]
@@ -142,6 +175,75 @@ namespace Quiz.Controllers
             }
 
             return Ok(allQuizzes);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetIdQuiz(int id) 
+        {
+            var quiz = _quizDbContext.Quiz
+                .Include(q => q.Category)
+                .Include(q => q.Answers)
+                .Include(q => q.CorrectAnswers)
+                .Include(q => q.Questions)
+                .Include(q => q.Images)
+                .FirstOrDefault(q => q.Id == id);
+            if (quiz == null)
+            {
+                return NotFound();
+            }
+            var quizDto = _mapper.Map<QuizDto>(quiz);
+            return Ok(quizDto);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteQuiz(int id) 
+        {
+            var quiz = _quizDbContext.Quiz
+                .Include(q => q.Category)
+                .Include(q => q.Answers)
+                .Include(q => q.CorrectAnswers)
+                .Include(q => q.Questions)
+                .Include(q => q.Images)
+                .FirstOrDefault(q => q.Id == id);
+            if (quiz == null)
+            {
+                return NotFound();
+            }
+
+            _quizDbContext.Quiz.Remove(quiz);
+            _quizDbContext.SaveChanges();
+
+            return Ok(quiz);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateQuiz(int id, [FromBody] QuizDto updatedQuizDto)
+        {
+           
+            var existingQuiz = _quizDbContext.Quiz
+                .Include(q => q.Category)
+                .Include(q => q.Answers)
+                .Include(q => q.CorrectAnswers)
+                .Include(q => q.Questions)
+                .Include(q => q.Images)
+                .FirstOrDefault(q => q.Id == id);
+
+            if (existingQuiz == null)
+            {
+                return NotFound();
+            }
+
+            
+            existingQuiz.Title = updatedQuizDto.Title;
+            existingQuiz.Description = updatedQuizDto.Description;
+            existingQuiz.Rating = updatedQuizDto.Rating;          
+            existingQuiz.Category.NameCategory = updatedQuizDto.Category.NameCategory;
+            existingQuiz.Answers = updatedQuizDto.Answers?.Select(answer => new Answer { AnswerText = answer.AnswerText }).ToList();
+            existingQuiz.CorrectAnswers = updatedQuizDto.CorrectAnswers?.Select(correctAnswer => new CorrectAnswer { correctAnswer = correctAnswer.correctAnswer }).ToList();
+            existingQuiz.Questions = updatedQuizDto.Questions?.Select(question => new Question { QuestionText = question.QuestionText }).ToList();
+               
+            _quizDbContext.SaveChanges();
+
+            return Ok(existingQuiz);
         }
     }
 }
